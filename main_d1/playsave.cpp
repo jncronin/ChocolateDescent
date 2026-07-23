@@ -318,6 +318,7 @@ int read_player_file()
 
 	//read kconfig data
 	{
+#ifndef __GAMEKID__
 		if (fread(kconfig_settings, MAX_CONTROLS * CONTROL_MAX_TYPES, 1, file) != 1)
 			errno_ret = errno;
 		else if (fread(&Config_control_type, sizeof(uint8_t), 1, file) != 1)
@@ -326,6 +327,7 @@ int read_player_file()
 			errno_ret = errno;
 
 		if (errno_ret == EZERO)
+#endif
 		{
 			kc_set_controls();
 		}

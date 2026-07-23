@@ -123,7 +123,11 @@ control_info Controls;
 
 uint8_t Config_digi_volume = 16;
 uint8_t Config_midi_volume = 16;
+#ifdef __GAMEKID__
+uint8_t Config_control_type = 1;
+#else
 uint8_t Config_control_type = 0;
+#endif
 uint8_t Config_channels_reversed = 0;
 uint8_t Config_joystick_sensitivity = 8;
 
@@ -1744,6 +1748,24 @@ void kc_set_controls()
 
 	for (i = 0; i < NUM_KEY_CONTROLS; i++)
 		kc_keyboard[i].value = kconfig_settings[0][i];
+
+#ifdef __GAMEKID__
+	Config_control_type = 1;
+	for(i = 0; i < MAX_CONTROLS; i++)
+		kconfig_settings[Config_control_type][i] = 0xff;
+	kconfig_settings[Config_control_type][13] = 0x3;
+	kconfig_settings[Config_control_type][14] = 0;
+	kconfig_settings[Config_control_type][15] = 0x2;
+	kconfig_settings[Config_control_type][16] = 0x0;
+	kconfig_settings[Config_control_type][17] = 0x0;
+	kconfig_settings[Config_control_type][18] = 0x1;
+	kconfig_settings[Config_control_type][19] = 0xff;
+	kconfig_settings[Config_control_type][20] = 0x0;
+	kconfig_settings[Config_control_type][21] = 0xff;
+	kconfig_settings[Config_control_type][22] = 0x0;
+	kconfig_settings[Config_control_type][23] = 0x1;
+	kconfig_settings[Config_control_type][24] = 0x0;
+#endif
 
 	if ((Config_control_type > 0) && (Config_control_type < 5)) {
 		for (i = 0; i < NUM_OTHER_CONTROLS; i++) {

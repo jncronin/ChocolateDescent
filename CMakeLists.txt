@@ -701,7 +701,7 @@ if (WIN32)
     set(SHARED_SOURCES ${SHARED_SOURCES} ${WIN32_SOURCES})
 	set(NOT_COMPILED_SOURCES ${NOT_COMPILED_SOURCES} ${UNIX_SOURCES})
 	set(SHARED_LIBS ${SHARED_LIBS} "winmm")
-elseif(UNIX)
+elseif(UNIX OR GAMEKID)
 	add_definitions(-DUNIX -D_UNIX)
 	add_link_options(-pthread)
     set(SHARED_SOURCES ${SHARED_SOURCES} ${UNIX_SOURCES})
@@ -751,7 +751,7 @@ if (APPLE)
 		add_custom_command(TARGET ChocolateDescent POST_BUILD COMMAND /bin/zsh -c "/opt/homebrew/bin/dylibbundler -od -b -x \"${CMAKE_BINARY_DIR}/ChocolateDescent.app/Contents/MacOS/ChocolateDescent\" -d \"${CMAKE_BINARY_DIR}/ChocolateDescent.app/Contents/libs\"")
 		add_custom_command(TARGET ChocolateDescent2 POST_BUILD COMMAND /bin/zsh -c "/opt/homebrew/bin/dylibbundler -od -b -x \"${CMAKE_BINARY_DIR}/ChocolateDescent2.app/Contents/MacOS/ChocolateDescent2\" -d \"${CMAKE_BINARY_DIR}/ChocolateDescent2.app/Contents/libs\"")
 	endif()
-elseif(UNIX)
+elseif(UNIX OR GAMEKID)
 	add_executable(ChocolateDescent ${SHARED_SOURCES} ${NOT_COMPILED_SOURCES} ${DESCENT1_SOURCES})
 	add_executable(ChocolateDescent2 ${SHARED_SOURCES} ${NOT_COMPILED_SOURCES} ${DESCENT2_SOURCES})
 elseif(WIN32)
@@ -768,6 +768,35 @@ endif()
 
 target_link_libraries(ChocolateDescent ${SHARED_LIBS} ${DESCENT1_LIBS})
 target_link_libraries(ChocolateDescent2 ${SHARED_LIBS} ${DESCENT2_LIBS})
+
+if(GAMEKID)
+	target_link_libraries(ChocolateDescent
+		glib-2.0
+		gthread-2.0
+		iconv
+	)
+	target_link_libraries(ChocolateDescent2
+		glib-2.0
+		gthread-2.0
+		iconv
+	)
+
+	install(TARGETS
+		ChocolateDescent
+		ChocolateDescent2
+	)
+
+	include(CPack)
+
+	target_compile_options(ChocolateDescent
+	PRIVATE
+		-fsigned-char
+	)
+	target_compile_options(ChocolateDescent2
+	PRIVATE
+		-fsigned-char
+	)
+endif()
 
 target_compile_definitions(ChocolateDescent PUBLIC BUILD_DESCENT1)
 target_compile_definitions(ChocolateDescent2 PUBLIC BUILD_DESCENT2)

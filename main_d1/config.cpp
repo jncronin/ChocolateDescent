@@ -87,7 +87,11 @@ int ReadConfigFile()
 
 	Config_digi_volume = 4;
 	Config_midi_volume = 4;
+#ifdef __GAMEKID__
+	Config_control_type = 1;
+#else
 	Config_control_type = 0;
+#endif
 	Config_channels_reversed = 0;
 
 #if defined(CHOCOLATE_USE_LOCALIZED_PATHS)
