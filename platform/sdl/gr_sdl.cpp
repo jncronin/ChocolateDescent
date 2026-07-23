@@ -127,6 +127,7 @@ int plat_create_window()
 	}
 
 	SDL_ShowWindow(gameWindow);
+	SDL_ShowCursor(SDL_FALSE);
 
 	if (Fullscreen)
 		SDL_GetWindowSize(gameWindow, &CurWindowWidth, &CurWindowHeight);
